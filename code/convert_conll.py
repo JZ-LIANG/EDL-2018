@@ -21,9 +21,9 @@ lannguage = sys.argv[3]
 def write_conll_zh(src_dirpath,filenames):
     file_name = src_dirpath + '/' + filenames
     type_name = src_dirpath.split('/')[-1][:-4]
-    des_directory_zh = des_directory + '/zh'
-    os.mkdir(des_directory_zh)
-    writed_file_name = des_directory_zh + '/' + type_name + '.conll'
+    # des_directory_zh = des_directory + '/zh'
+    # os.mkdir(des_directory_zh)
+    writed_file_name = des_directory + '/' + type_name + '.conll'
     with open(file_name,'r') as f_read, open(writed_file_name, 'w+') as f_write:
         content = f_read.read().splitlines()
         print('processing: ', type_name)
@@ -43,9 +43,9 @@ def write_conll_zh(src_dirpath,filenames):
 def write_conll_en(dirpath,filenames):
     file_name = dirpath + '/' + filenames
     type_name = dirpath.split('/')[-1]
-    des_directory_en = des_directory + '/en'
-    os.mkdir(des_directory_en)
-    writed_file_name = des_directory_en + '/' + type_name + '.conll'
+    # des_directory_en = des_directory + '/en'
+    # os.mkdir(des_directory_en)
+    writed_file_name = des_directory + '/' + type_name + '.conll'
     with open(file_name,'r') as f_read, open(writed_file_name, 'w+') as f_write:
         content = f_read.read().splitlines()
         print('processing: ', type_name)
