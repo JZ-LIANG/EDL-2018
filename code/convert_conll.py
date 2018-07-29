@@ -46,7 +46,8 @@ if lannguage == 'zh':
 	        print(dirpath)
 	        writed_file_name = des_dirpath + '/' + type_name + '.conll'
 	        with open(writed_file_name, 'w+') as f_write:
-	        	f_write.write('test succussed!')
+	        	f_write.write(dirpath)
+	        	
 else if lannguage == 'en':
 	for (dirpath, dirnames, filenames) in os.walk(src_directory):
 	    if 'dev.bio' in filenames:
