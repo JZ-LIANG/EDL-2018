@@ -1,0 +1,7 @@
+# scrapy all the html document
+wget -r -np -nH –cut-dirs=3 -R “index.html*” https://blender04.cs.rpi.edu/~panx2/tmp/typing/
+
+
+# delete all the index*.html files
+find . -name "index*" -type f -delete 
+
