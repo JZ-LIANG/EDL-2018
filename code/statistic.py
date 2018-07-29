@@ -52,7 +52,8 @@ for (dirpath, dirnames, filenames) in os.walk(src_directory):
                 #scrapy the tag
                 # soup = BeautifulSoup(open(filepath), "html.parser")
                 # lxml is faster
-                with open(file_name,'r') as f_read:
+                print('processing: ', filepath)
+                with open(filepath,'r') as f_read:
                     soup = BeautifulSoup(f_read, "lxml")
                     tag = soup.find_all('p')
                     n_sentence += int(re.findall(r'\d+',tag[0].text)[0])
