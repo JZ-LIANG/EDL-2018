@@ -18,10 +18,10 @@ lannguage = sys.argv[3]
 
 
 
-def write_conll_zh(src_dirpath,des_dirpath,filenames):
+def write_conll_zh(src_dirpath,filenames):
     file_name = src_dirpath + '/' + filenames
     type_name = src_dirpath.split('/')[-1][:-4]
-    writed_file_name = des_dirpath + '/' + type_name + '.conll'
+    writed_file_name = des_directory + '/' + type_name + '.conll'
     with open(file_name,'r') as f_read, open(writed_file_name, 'w+') as f_write:
         content = f_read.read().splitlines()
         print(type_name)
@@ -44,7 +44,7 @@ if lannguage == 'zh':
 	    if 'dev.bio' in filenames:
 	        # write_conll_zh(dirpath, 'dev.bio')
 	        print(dirpath)
-	        writed_file_name = des_dirpath + '/' + type_name + '.conll'
+	        writed_file_name = des_directory + '/' + type_name + '.conll'
 	        with open(writed_file_name, 'w+') as f_write:
 	        	f_write.write(dirpath)
 
