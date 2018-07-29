@@ -42,12 +42,12 @@ def write_conll_zh(src_dirpath,filenames):
 if lannguage == 'zh':
 	for (dirpath, dirnames, filenames) in os.walk(src_directory):
 	    if 'dev.bio' in filenames:
-	        # write_conll_zh(dirpath, 'dev.bio')
-	        print(dirpath)
-	        type_name = dirpath.split('/')[-1][:-4]
-	        writed_file_name = des_directory + '/' + type_name + '.conll'
-	        with open(writed_file_name, 'w+') as f_write:
-	        	f_write.write(dirpath)
+	        write_conll_zh(dirpath, 'dev.bio')
+	        # print(dirpath)
+	        # type_name = dirpath.split('/')[-1][:-4]
+	        # writed_file_name = des_directory + '/' + type_name + '.conll'
+	        # with open(writed_file_name, 'w+') as f_write:
+	        # 	f_write.write(dirpath)
 
 elif lannguage == 'en':
 	for (dirpath, dirnames, filenames) in os.walk(src_directory):
