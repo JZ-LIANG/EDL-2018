@@ -74,7 +74,7 @@ elif lannguage == 'zh':
     output_path = des_directory + '/' + 'zh_result.txt'
 
 with open (output_path, "wb") as fp:
-    pickle.dump((ls_entity_type,ls_n_document,ls_n_sentence,ls_n_token,,ls_n_MISC,ls_n_ALL), fp)
+    pickle.dump((ls_entity_type,ls_n_document,ls_n_sentence,ls_n_token,ls_n_MISC,ls_n_ALL), fp)
 
 # print(ls_entity_type)
 # print(ls_n_document)
