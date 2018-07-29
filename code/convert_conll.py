@@ -21,13 +21,36 @@ lannguage = sys.argv[3]
 def write_conll_zh(src_dirpath,filenames):
     file_name = src_dirpath + '/' + filenames
     type_name = src_dirpath.split('/')[-1][:-4]
-    writed_file_name = des_directory + '/' + type_name + '.conll'
+    des_directory_zh = des_directory + '/zh'
+    writed_file_name = des_directory_zh + '/' + type_name + '.conll'
     with open(file_name,'r') as f_read, open(writed_file_name, 'w+') as f_write:
         content = f_read.read().splitlines()
-        print(type_name)
+        print('processing: ', type_name)
         for line in content:
             if line:
                 token,temp,entity_type = line.split()
+                if entity_type != 'O':
+                    entity_type = entity_type[:2] + type_name
+                output_line = token + "    " + entity_type + '\n'
+#                 output_line =line.split()[0]+ "    " +line.split()[2] + '\n'
+    
+                f_write.write(output_line)
+            else:
+                f_write.write('\n')
+
+
+def write_conll_en(dirpath,filenames):
+    file_name = dirpath + '/' + filenames
+    type_name = dirpath.split('/')[-1]
+    des_directory_en = des_directory + '/en'
+    writed_file_name = des_directory_en + '/' + type_name + '.conll'
+    with open(file_name,'r') as f_read, open(writed_file_name, 'w+') as f_write:
+        content = f_read.read().splitlines()
+        print('processing: ', type_name)
+        for line in content:
+#             print(line)
+            if line:
+                token,temp1,entity_type,temp2 = line.split()
                 if entity_type != 'O':
                     entity_type = entity_type[:2] + type_name
                 output_line = token + "    " + entity_type + '\n'
@@ -52,5 +75,5 @@ if lannguage == 'zh':
 elif lannguage == 'en':
 	for (dirpath, dirnames, filenames) in os.walk(src_directory):
 	    if 'dev.bio' in filenames:
-	        # write_conll_en(dirpath, 'dev.bio')
-	        print(dirpath)
+	        write_conll_en(dirpath, 'dev.bio')
+	        # print(dirpath)
