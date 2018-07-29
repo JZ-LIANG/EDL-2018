@@ -1,0 +1,55 @@
+英语    O
+里    O
+的    O
+「    O
+Lifeline    O
+」    O
+本来    O
+是    O
+指连系    O
+着    O
+救生衣    B-Coat103057021
+、    O
+救生艇    O
+等    O
+的    O
+绳索    O
+、    O
+船员    O
+与    O
+船    O
+之间    O
+连系    O
+的    O
+绳索    O
+、    O
+与    O
+及    O
+连系    O
+着    O
+潜水    O
+人员    O
+的    O
+绳索    O
+等等    O
+。    O
+
+CMU    B-Coat103057021
+–    I-Coat103057021
+33A/P22P-18    I-Coat103057021
+-    O
+Air    O
+Force    O
+issue    O
+Personal    O
+flotation    O
+device    O
+
+穿    O
+实验服    B-Coat103057021
+的    O
+女    O
+科学家    O
+。    O
+
+
