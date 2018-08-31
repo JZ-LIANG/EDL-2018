@@ -42,6 +42,26 @@ ls_stderr = ['stderr0.txt','stderr1.txt','stderr2.txt','stderr3.txt','stderr4.tx
 # train 5-folds CV
 ##############################################################################
 
+import gc
+import os
+from subprocess import call
+import shutil
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+src_directory = '/home/liang/internship/stanford_NER/data/rpi_5_fold_NER/'
+#dst_directory = '/Users/liangjianzhong/Desktop/test/result'
+#prop_directory = '/Users/liangjianzhong/Desktop/test/prop'
+
+path_jar = '/home/liang/internship/stanford_NER/stanford-ner-2018-02-27/stanford-ner.jar'
+classifier ='edu.stanford.nlp.ie.crf.CRFClassifier'
+ls_test = ['fold0.tsv','fold1.tsv','fold2.tsv','fold3.tsv','fold4.tsv']
+ls_prop = ['fold0.prop','fold1.prop','fold2.prop','fold3.prop','fold4.prop']
+ls_stdout = ['stdout0.txt','stdout1.txt','stdout2.txt','stdout3.txt','stdout4.txt']
+ls_stderr = ['stderr0.txt','stderr1.txt','stderr2.txt','stderr3.txt','stderr4.txt']
+
+
 
 for (dirpath, dirnames, filenames) in os.walk(src_directory):
     if filenames and (filenames[0][-4:] == '.tsv'):
@@ -50,12 +70,16 @@ for (dirpath, dirnames, filenames) in os.walk(src_directory):
         for i in range(5):
             prop_file = dirpath + '/' + ls_prop[i]
             os.chdir(dirpath)
-            call(["java", "-cp", path_jar, classifier, '-prop', prop_file])
+            call(["java", "-mx4g","-cp", path_jar, classifier, '-prop', prop_file])
             with open(ls_stdout[i], 'w+') as stdout_file,open(ls_stderr[i], 'w+') as stderr_file:
                 call(["java", "-cp", path_jar, classifier,'-loadClassifier', 
                       'ner-model.ser.gz', '-testFile',ls_test[i]], stdout =stdout_file, stderr = stderr_file)
             os.remove("ner-model.ser.gz")
+            del stdout_file, stderr_file
+        gc.collect()    
 
+
+        
 
 ##############################################################################
 # collect the result
