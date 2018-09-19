@@ -18,6 +18,8 @@ warnings.filterwarnings('ignore')
 import time
 import pandas as pd
 from subprocess import call
+import json
+
 
 def load_parameters(parameters_filepath, arguments={}, verbose=True):
     '''
@@ -302,8 +304,23 @@ def main(argv=sys.argv):
         arguments['output_folder'] = new_output_folder
 
         nn = NeuroNER(**arguments)
-        nn.fit()
+        best_epoch = nn.fit()
         nn.close()
+
+        # delete the needless files but keep the labeling files of the best epoch
+        model_data_folder_name = os.listdir(new_output_folder)[0]
+        model_data_path = new_output_folder + model_data_folder_name + '/'
+        file1 = '0{}_train.txt'.format(str(best_epoch))
+        file2 = '0{}_valid.txt'.format(str(best_epoch))
+        file1_path = model_data_path + file1
+        file2_path = model_data_path + file2
+        new_file1_path = model_data_path + 'best_train.conll'
+        new_file1_path = model_data_path + 'best_vaild.conll'
+        os.rename(file1_path, new_file1_path)
+        os.rename(file2_path, new_file1_path)
+        call(["find", model_data_path, "-name", "*.txt", "-delete"])
+
+
 
 
 if __name__ == "__main__":

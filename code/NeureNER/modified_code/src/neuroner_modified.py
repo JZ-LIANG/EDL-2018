@@ -313,56 +313,61 @@ class NeuroNER(object):
         results['execution_details'] = {}
         results['execution_details']['train_start'] = start_time
         results['execution_details']['time_stamp'] = experiment_timestamp
-        results['execution_details']['early_stop'] = False
+        results['execution_details']['early_stop_default'] = False
+        results['execution_details']['early_stop_new'] = False
         results['execution_details']['keyboard_interrupt'] = False
         results['execution_details']['num_epochs'] = 0
         results['model_options'] = copy.copy(parameters)
 
-        model_folder = os.path.join(stats_graph_folder, 'model')
-        utils.create_folder_if_not_exists(model_folder)
-        with open(os.path.join(model_folder, 'parameters.ini'), 'w') as parameters_file:
-            conf_parameters.write(parameters_file)
-        pickle.dump(dataset, open(os.path.join(model_folder, 'dataset.pickle'), 'wb'))
+
+        # self-add
+        # no need to save model and tensorboard
+
+        # model_folder = os.path.join(stats_graph_folder, 'model')
+        # utils.create_folder_if_not_exists(model_folder)
+        # with open(os.path.join(model_folder, 'parameters.ini'), 'w') as parameters_file:
+        #     conf_parameters.write(parameters_file)
+        # pickle.dump(dataset, open(os.path.join(model_folder, 'dataset.pickle'), 'wb'))
             
-        tensorboard_log_folder = os.path.join(stats_graph_folder, 'tensorboard_logs')
-        utils.create_folder_if_not_exists(tensorboard_log_folder)
-        tensorboard_log_folders = {}
-        for dataset_type in dataset_filepaths.keys():
-            tensorboard_log_folders[dataset_type] = os.path.join(stats_graph_folder, 'tensorboard_logs', dataset_type)
-            utils.create_folder_if_not_exists(tensorboard_log_folders[dataset_type])
+        # tensorboard_log_folder = os.path.join(stats_graph_folder, 'tensorboard_logs')
+        # utils.create_folder_if_not_exists(tensorboard_log_folder)
+        # tensorboard_log_folders = {}
+        # for dataset_type in dataset_filepaths.keys():
+        #     tensorboard_log_folders[dataset_type] = os.path.join(stats_graph_folder, 'tensorboard_logs', dataset_type)
+        #     utils.create_folder_if_not_exists(tensorboard_log_folders[dataset_type])
                 
-        # Instantiate the writers for TensorBoard
-        writers = {}
-        for dataset_type in dataset_filepaths.keys():
-            writers[dataset_type] = tf.summary.FileWriter(tensorboard_log_folders[dataset_type], graph=sess.graph)
-        embedding_writer = tf.summary.FileWriter(model_folder) # embedding_writer has to write in model_folder, otherwise TensorBoard won't be able to view embeddings
+        # # Instantiate the writers for TensorBoard
+        # writers = {}
+        # for dataset_type in dataset_filepaths.keys():
+        #     writers[dataset_type] = tf.summary.FileWriter(tensorboard_log_folders[dataset_type], graph=sess.graph)
+        # embedding_writer = tf.summary.FileWriter(model_folder) # embedding_writer has to write in model_folder, otherwise TensorBoard won't be able to view embeddings
 
-        embeddings_projector_config = projector.ProjectorConfig()
-        tensorboard_token_embeddings = embeddings_projector_config.embeddings.add()
-        tensorboard_token_embeddings.tensor_name = model.token_embedding_weights.name
-        token_list_file_path = os.path.join(model_folder, 'tensorboard_metadata_tokens.tsv')
-        tensorboard_token_embeddings.metadata_path = os.path.relpath(token_list_file_path, '..')
+        # embeddings_projector_config = projector.ProjectorConfig()
+        # tensorboard_token_embeddings = embeddings_projector_config.embeddings.add()
+        # tensorboard_token_embeddings.tensor_name = model.token_embedding_weights.name
+        # token_list_file_path = os.path.join(model_folder, 'tensorboard_metadata_tokens.tsv')
+        # tensorboard_token_embeddings.metadata_path = os.path.relpath(token_list_file_path, '..')
 
-        tensorboard_character_embeddings = embeddings_projector_config.embeddings.add()
-        tensorboard_character_embeddings.tensor_name = model.character_embedding_weights.name
-        character_list_file_path = os.path.join(model_folder, 'tensorboard_metadata_characters.tsv')
-        tensorboard_character_embeddings.metadata_path = os.path.relpath(character_list_file_path, '..')
+        # tensorboard_character_embeddings = embeddings_projector_config.embeddings.add()
+        # tensorboard_character_embeddings.tensor_name = model.character_embedding_weights.name
+        # character_list_file_path = os.path.join(model_folder, 'tensorboard_metadata_characters.tsv')
+        # tensorboard_character_embeddings.metadata_path = os.path.relpath(character_list_file_path, '..')
 
-        projector.visualize_embeddings(embedding_writer, embeddings_projector_config)
+        # projector.visualize_embeddings(embedding_writer, embeddings_projector_config)
 
-        # Write metadata for TensorBoard embeddings
-        token_list_file = codecs.open(token_list_file_path,'w', 'UTF-8')
-        for token_index in range(dataset.vocabulary_size):
-            token_list_file.write('{0}\n'.format(dataset.index_to_token[token_index]))
-        token_list_file.close()
+        # # Write metadata for TensorBoard embeddings
+        # token_list_file = codecs.open(token_list_file_path,'w', 'UTF-8')
+        # for token_index in range(dataset.vocabulary_size):
+        #     token_list_file.write('{0}\n'.format(dataset.index_to_token[token_index]))
+        # token_list_file.close()
 
-        character_list_file = codecs.open(character_list_file_path,'w', 'UTF-8')
-        for character_index in range(dataset.alphabet_size):
-            if character_index == dataset.PADDING_CHARACTER_INDEX:
-                character_list_file.write('PADDING\n')
-            else:
-                character_list_file.write('{0}\n'.format(dataset.index_to_character[character_index]))
-        character_list_file.close()
+        # character_list_file = codecs.open(character_list_file_path,'w', 'UTF-8')
+        # for character_index in range(dataset.alphabet_size):
+        #     if character_index == dataset.PADDING_CHARACTER_INDEX:
+        #         character_list_file.write('PADDING\n')
+        #     else:
+        #         character_list_file.write('{0}\n'.format(dataset.index_to_character[character_index]))
+        # character_list_file.close()
 
 
         # Start training + evaluation loop. Each iteration corresponds to 1 epoch.
@@ -429,15 +434,13 @@ class NeuroNER(object):
 
                 if bad_counter >= parameters['patience']:
                     print('Early Stop!')
-                    results['execution_details']['early_stop'] = True
+                    results['execution_details']['early_stop_default'] = True
                     break
 
                 # self-add
                 # tolerance stop
                 if abs(valid_f1_score - previous_best_valid_f1_tolerance_score) / (valid_f1_score+0.01) > 0.005:
-                    bad_counter_tolerance = 0
-                    
-		
+                    bad_counter_tolerance = 0                   		
                 else:
                     bad_counter_tolerance += 1
                     print("The last {0} epochs have not shown under the tolerance threshold on the validation set.".format(bad_counter_tolerance))
@@ -446,9 +449,8 @@ class NeuroNER(object):
 
                 if bad_counter_tolerance >= 3:
                     print('Tolerance Stop!')
-                    results['execution_details']['early_stop'] = True
+                    results['execution_details']['early_stop_new'] = True
                     break
-                
 
                 if epoch_number >= parameters['maximum_number_of_epochs']: 
                     break
@@ -463,8 +465,9 @@ class NeuroNER(object):
         results['execution_details']['train_duration'] = end_time - start_time
         results['execution_details']['train_end'] = end_time
         evaluate.save_results(results, stats_graph_folder)
-        for dataset_type in dataset_filepaths.keys():
-            writers[dataset_type].close()
+        # for dataset_type in dataset_filepaths.keys():
+        #     writers[dataset_type].close()
+        return results['valid']['epoch_for_best_f1_score']
 
     def predict(self, text):
         self.prediction_count += 1        

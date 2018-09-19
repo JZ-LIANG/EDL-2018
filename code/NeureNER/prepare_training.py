@@ -1,3 +1,5 @@
+# this file use to convert thte 5 fold conll RPI_blender 2018 data to the format need by NeuroNER
+
 import os
 
 def space2tab (data_path, tab_path,entity_name):
