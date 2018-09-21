@@ -373,7 +373,7 @@ class NeuroNER(object):
         # Start training + evaluation loop. Each iteration corresponds to 1 epoch.
         bad_counter = 0 # number of epochs with no improvement on the validation test in terms of F1-score
         # self-add
-        tolerance = 0.001 # improvement threshold
+        tolerance = 0.005 # improvement threshold
         bad_counter_tolerance = 0 # number of epochs the improvement below certain threshold on the validation test in terms of F1-score
         previous_best_valid_f1_tolerance_score = 0
 
