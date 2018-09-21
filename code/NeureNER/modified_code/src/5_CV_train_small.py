@@ -59,7 +59,7 @@ def load_parameters(parameters_filepath, arguments={}, verbose=True):
                   'tagging_format':'bioes',
                   'token_embedding_dimension':100,
                   'token_lstm_hidden_state_dimension':100,
-                  'token_pretrained_embedding_filepath':'../../data/word_vectors/glove.6B.100d.txt',
+                  'token_pretrained_embedding_filepath':'../data/word_vectors/glove.6B.100d.txt',
                   'tokenizer':'spacy',
                   'train_model':True,
                   'use_character_lstm':True,
@@ -263,12 +263,12 @@ def main(argv=sys.argv):
               'learning_rate':0.005,
               'load_only_pretrained_token_embeddings':False,
               'main_evaluation_mode':'conll',
-              'maximum_number_of_epochs':25,###############################
+              'maximum_number_of_epochs': 30,###############################
               'number_of_cpu_threads':8,
               'number_of_gpus':0,
               'optimizer':'sgd',
               'output_folder':None,
-              'patience':4,#########################################3
+              'patience':5,#########################################3
               'plot_format':'pdf',
               'reload_character_embeddings':False,
               'reload_character_lstm':False,
@@ -281,20 +281,21 @@ def main(argv=sys.argv):
               'tagging_format':'bio',
               'token_embedding_dimension':100,
               'token_lstm_hidden_state_dimension':100,
-              'token_pretrained_embedding_filepath':'/home/liang/internship/NeuroNER/NeuroNER-master/data/word_vectors/glove.6B.100d.txt',
+              'token_pretrained_embedding_filepath':'../data/word_vectors/glove.6B.100d.txt',############ word_embedding location
               'tokenizer':'spacy',
               'train_model':True,
               'use_character_lstm':True,
               'use_crf':True,
               'use_pretrained_model':False,
               'verbose':False}
-    root_data_path = '/home/liang/internship/NeuroNER/NeuroNER-master/data/rpi/test/result/NeuroNER/'
+
+    root_data_path = '../data/RPI/fold0/'
     
+    with open("small_entities_set.txt", "rb") as fp:   # Unpickling
+        entities = pickle.load(fp)
+    n_entity = len(entities)
 
-    file_path = '/home/liang/internship/EDL-2018/result/RPI_2018_statistic_all_1235_data.csv'
-    df_en = pd.DataFrame.from_csv(file_path)
-    entities = df_en.sort_values('n_sentence')[909:1230]['entity_type'].tolist()
-
+	
     for i, entity in enumerate(entities):
 
 
@@ -310,16 +311,18 @@ def main(argv=sys.argv):
         # delete the needless files but keep the labeling files of the best epoch
         model_data_folder_name = os.listdir(new_output_folder)[0]
         model_data_path = new_output_folder + model_data_folder_name + '/'
-        file1 = '0{}_train.txt'.format(str(best_epoch))
-        file2 = '0{}_valid.txt'.format(str(best_epoch))
+        file1 = '{0:03d}_train.txt'.format(best_epoch)
+        file2 = '{0:03d}_valid.txt'.format(best_epoch)
         file1_path = model_data_path + file1
         file2_path = model_data_path + file2
         new_file1_path = model_data_path + 'best_train.conll'
-        new_file1_path = model_data_path + 'best_vaild.conll'
+        new_file2_path = model_data_path + 'best_vaild.conll'
         os.rename(file1_path, new_file1_path)
-        os.rename(file2_path, new_file1_path)
+        os.rename(file2_path, new_file2_path)
         call(["find", model_data_path, "-name", "*.txt", "-delete"])
-
+        call(["find", new_data_folder, "-name", "*.txt", "-delete"])
+        # show the progress
+        print('{} / {} entities are done'.format(i,n_entity))
 
 
 
