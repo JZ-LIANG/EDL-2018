@@ -1,1 +1,10 @@
+# MAC
 .DS_Store
+.AppleDouble
+.LSOverride
+
+.ipynb_checkpoints
+
+#
+/code/Models/*
+baseline_results/notebooks/*
